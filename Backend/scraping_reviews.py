@@ -7,10 +7,14 @@ from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.options import Options
 
 #initialize chromedriver in silent mode, as well as supply webdriver if it is not installed
+# /usr/bin/chromedriver
+# /mnt/c/tools/selenium/chromedriver.exe
+# C:/tools/selenium/chromedriver.exe
+
 def init():
     options = Options()
     options.headless = True
-    driver = webdriver.Chrome(ChromeDriverManager().install(), options=options)
+    driver = webdriver.Chrome('C:/tools/selenium/chromedriver.exe', options=options)
     return driver
 
 #shadow root DOM traversal 
@@ -60,7 +64,7 @@ def get_related_movies(string):
 
 #used to receive the reviews for a selected movie
 def get_movie_info(string):
-    url = 'https://www.rottentomatoes.com/m/' + string.replace(' ', '_') + '/reviews?type=verified_audience'
+    url = 'https://www.rottentomatoes.com/m/' + string.replace(' ', '_') + '/reviews?type=user'
     driver = init()
     driver.get(url)
     reviews = []
@@ -77,8 +81,8 @@ def get_movie_info(string):
             rating = find_rating_from_stars(review)
             ratings.append(rating)
     except Exception:
-        return ("Could not find any verified audience reviews. ")
-    return list(zip(reviews, ratings))
+        print("Could not find any verified audience reviews. ")
+    return reviews, ratings
     
 
 # function to calculate review numerically 
