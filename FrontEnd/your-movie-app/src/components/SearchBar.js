@@ -17,6 +17,7 @@ const fetchDataFromAPI = () => {
     axios.get("https://gaz3000-auburnhacks21-app.herokuapp.com/get_search/" + search)
     .then((res) => {
         setQuery(res.data.query)
+        console.log(res)
     })
 }
 
@@ -30,10 +31,11 @@ const fetchDataFromAPI = () => {
             <button type="button" onClick={() => fetchDataFromAPI()}>Search</button>
            
             <p>Related Movies:</p>
+        
       {query.map((item) => (
           <div >
-        <FocusMovie key={item.url} movieTitle={item.title} src={item.image_url}/>
-        </div>
+              <FocusMovie keyValue={item.url} movieTitle={item.title} src={item.image_url}/>
+       </div>
       ))}
         </>
     )

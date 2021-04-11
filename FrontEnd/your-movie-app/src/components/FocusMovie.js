@@ -6,11 +6,17 @@ const FocusMovie = ({keyValue, movieTitle, src}) => {
     const [score, setScore] = useState("")
 
     const fetchNLPDataFromAPI = () => {
+        var temp = keyValue.split("/")
+        keyValue = temp[temp.length - 1]
+        console.log(keyValue)
         axios.get("https://gaz3000-auburnhacks21-app.herokuapp.com/get_sentiment/" + keyValue)
         .then((res) => {
+            if (res.data.score !== -1)
+           {
             setScore(res.data.score)
-            console.log("click")
-            console.log(res.data.score)
+           }
+           console.log(res.data.score)
+            
         })
 
     }
