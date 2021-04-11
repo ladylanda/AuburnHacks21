@@ -3,8 +3,13 @@ from bs4 import BeautifulSoup
 from urllib.request import urlopen
 import re
 from selenium import webdriver
-from webdriver_manager.chrome import ChromeDriverManager
+# from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.options import Options
+from selenium.common.exceptions import NoSuchElementException
+import os
+
+CHROMEDRIVER_PATH = '/app/.chromedriver/bin/chromedriver'
+GOOGLE_CHROME_BIN = '/app/.apt/usr/bin/google-chrome'
 
 #initialize chromedriver in silent mode, as well as supply webdriver if it is not installed
 # /usr/bin/chromedriver
@@ -13,8 +18,13 @@ from selenium.webdriver.chrome.options import Options
 
 def init():
     options = Options()
-    options.headless = True
-    driver = webdriver.Chrome('C:/tools/selenium/chromedriver.exe', options=options)
+    options.add_argument('--headless')
+    # options.add_argument('--disable-dev-shm-usage')
+    options.add_argument('--disable-gpu')
+    options.add_argument('--no-sandbox')
+    options.add_argument('--remote-debugging-port=9222')
+    options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
+    driver = webdriver.Chrome(executable_path=str(os.environ.get("CHROMEDRIVER_PATH")), chrome_options=options)
     return driver
 
 #shadow root DOM traversal 
@@ -30,10 +40,8 @@ def get_related_movies(string):
     driver = init()
     #navigate to url
     driver.get(url)
-    
-    image_urls = []
-    urls = []
-    titles = []
+    # arrays
+    data = []
     try:
         #shadow dom traversal to movies metadata
         root1 = driver.find_element_by_tag_name('search-result-container')
@@ -46,21 +54,30 @@ def get_related_movies(string):
         #find all media-rows (contains movie metadata such as image url and title)
         media = soup.find_all("media-row")
         for m in media:
-            #pattern matching to extract fields from html data
+            obj_dict = {}
+                #pattern matching to extract fields from html data
             image_url_pattern = r'imageurl=".*name'
             image_url_grp = re.search(image_url_pattern, str(m))
-            image_urls.append(image_url_grp.group(0)[10:-6].strip())
-            
+                # image_urls.append(image_url_grp.group(0)[10:-6].strip())
+            obj_dict["image_url"] = str(image_url_grp.group(0)[10:-6].strip())
+
             url_pattern = r' url=".*"'
             url_grp = re.search(url_pattern, str(m))
-            urls.append(url_grp.group(0)[6:-1].strip())
+                # urls.append(url_grp.group(0)[6:-1].strip())
+            obj_dict["url"] = str(url_grp.group(0)[6:-1].strip())
 
             title_pattern = r' name=".*" release'
             title_grp = re.search(title_pattern, str(m))
-            titles.append(title_grp.group(0)[7:-9].strip())
-    except Exception:
-        return ("Could not find any movies with requested tag, please enter a different set of terms.")
-    return list(zip(titles, urls, image_urls))
+                # titles.append(title_grp.group(0)[7:-9].strip())
+            obj_dict["title"] = title_grp.group(0)[7:-9].strip()
+            data.append(obj_dict)
+    except NoSuchElementException:
+        print("Could not find any movies with requested tag, please enter a different set of terms.")
+    finally:
+        driver.stop_client()
+        driver.close()
+        driver.quit()
+    return data
 
 #used to receive the reviews for a selected movie
 def get_movie_info(string):
@@ -80,8 +97,12 @@ def get_movie_info(string):
             reviews.append(review_html)
             rating = find_rating_from_stars(review)
             ratings.append(rating)
-    except Exception:
+    except NoSuchElementException:
         print("Could not find any verified audience reviews. ")
+    finally:
+        driver.stop_client()
+        driver.close()
+        driver.quit()
     return reviews, ratings
     
 

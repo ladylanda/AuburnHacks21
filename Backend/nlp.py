@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
 import nltk
+
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 from textblob import TextBlob
 
@@ -15,7 +16,7 @@ from typing import Any, Dict, List
 
 # import model
 nltk.download('punkt')
-
+nltk.download('vader_lexicon')
 # configuring heatmap
 # sns.set(rc={'figure.figsize':(35,3)})
 
