@@ -1,4 +1,5 @@
 
+
 from scraping_reviews import get_movie_info, get_related_movies
 
 from collections import Counter
@@ -16,6 +17,7 @@ from typing import Any, Dict, List
 # import model
 nltk.download('punkt')
 
+backend_path = 'D:/DESKTOP-1S7D2TD/qcaij/OneDrive - University of Florida/DESKTOP-1S7D2TD/qcaij/Desktop/AuburnHacks21/Backend'
 # configuring heatmap
 # sns.set(rc={'figure.figsize':(35,3)})
 
@@ -45,7 +47,13 @@ def nlp_sentiment(reviews: List[str], ratings: List[float]):
     print('ratings')
     print(ratings)
 
-    polarity_scores = sid.polarity_scores(text=' '.join(reviews))
+    all_reviews = ' '.join(reviews)
+    with open(file='reviews.txt', mode='w') as f:
+        f.write(all_reviews)
+        os.chdir('C:/Program Files/MATLAB/R2021a/bin')
+        os.system(command=f"matlab.exe -nodisplay -nosplash -nodesktop -r \"run(\'{backend_path}/matlab_text_analysis.m\');\"")
+
+    polarity_scores = sid.polarity_scores(text=all_reviews)
     print('NLTK polarity scores:')
     print(polarity_scores)
 
