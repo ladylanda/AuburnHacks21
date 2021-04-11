@@ -1,13 +1,12 @@
 import Movie from './Movie'
 
-const Movies = ({movies}) => {
+const Movies = ({movies, titleClick}) => {
     
-
+    console.log({movies})
     return (
         <div>
-            {movies.map((movie) => (
-            <Movie key={movie.id} movie={movie}/>
-            ))}
+        <p>{movies}</p>
+        
         </div>
     )
 }
