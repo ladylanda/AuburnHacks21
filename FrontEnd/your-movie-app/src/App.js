@@ -1,53 +1,45 @@
 import {useState, useEffect} from 'react'
 import Header from './components/Header'
-import SearchBar from './components/SearchBar'
 import Movies from './components/Movies'
-import MovieDescription from './components/MovieDescription'
+import axios from 'axios'
+import Score from './components/Score'
+import FocusMovie from './components/FocusMovie'
 
 function App() {
   const [movies, setMovies] = useState([])
-  const [movieDes, setMovieDes] = useState([])
+  const [focusMovie, setFocusMovie] = useState([])
+  const [movieScore, setMovieScore] = useState([])
 
-  useEffect(() => {
-    const getMovies = async () => {
-      const moviesFromServer = await fetchMovies()
-      setMovies(moviesFromServer)
+ 
+
+  const onClick = (e) => {
+    var inputQuery = document.getElementById("searchBar").value
+    console.log("https://gaz3000-auburnhacks21-app.herokuapp.com/get_search/" + inputQuery)
+
+    axios.get("https://gaz3000-auburnhacks21-app.herokuapp.com/get_search/" + inputQuery)
+    .then((res) =>
+    {
+      setMovies(res.query[1])
     }
+    )
+}
 
-    const getMovieDes = async () => {
-      const movieDesFromServer = await fetchMovieDes()
-      setMovieDes(movieDesFromServer)
+const titleClick = (e) => {
+  setFocusMovie(e.target)
+  axios.get("https://gaz3000-auburnhacks21-app.herokuapp.com/get_sentiment/" + focusMovie[1])
+    .then((res) =>
+    {
+      setMovieScore(res.score)
     }
-
-    
-    getMovieDes()
-    getMovies()
-
-  }, [])
-
-  //Fetch Movies
-  const fetchMovies = async () => {
-    const res = await fetch('http://localhost:5000/movies')
-    const data = await res.json()
-
-    return data
-  }
-
-  //Fetch MovieDescription(When Clicked)
-  const fetchMovieDes = async () => {
-    const res = await fetch('http://localhost:5000/movie_description')
-    const data = await res.json()
-
-    console.log(data)
-    return data
-  }
+    )
+}
 
   return (
     <div className="container">
-      <Header />
-      <SearchBar />
-      <Movies movies={movies}/>
-      <MovieDescription movieDes={movieDes}/>
+      <Header onClick={onClick}/>
+      <Movies movies={movies} titleClick = {titleClick}/>
+      <Score movieScore={movieScore}/>
+      <FocusMovie focusMovie={focusMovie}/>
     </div>
   );
 }
