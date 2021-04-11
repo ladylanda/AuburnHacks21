@@ -6,11 +6,11 @@ import Score from './components/Score'
 import FocusMovie from './components/FocusMovie'
 
 function App() {
-  const [movies, setMovies] = useState([])
+  const [movies, setMovies] = useState("")
   const [focusMovie, setFocusMovie] = useState([])
   const [movieScore, setMovieScore] = useState([])
 
- 
+ var queryTable = []
 
   const onClick = (e) => {
     var inputQuery = document.getElementById("searchBar").value
@@ -19,7 +19,9 @@ function App() {
     axios.get("https://gaz3000-auburnhacks21-app.herokuapp.com/get_search/" + inputQuery)
     .then((res) =>
     {
-      setMovies(res.query[1])
+      //setMovies(res.query)
+      //console.log(res.data.query)
+      setMovies(res.data.query)
     }
     )
 }
@@ -34,6 +36,7 @@ const titleClick = (e) => {
     )
 }
 
+console.log(queryTable)
   return (
     <div className="container">
       <Header onClick={onClick}/>
