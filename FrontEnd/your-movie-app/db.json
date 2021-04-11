@@ -1,0 +1,29 @@
+{
+  "movies": [
+    {
+      "id": 1,
+      "title": "The Avengers",
+      "src": "TheAvengers.jpg"
+  },
+  {
+      "id": 2,
+      "title": "Avengers Infinity War",
+      "src": "AvengersInfinityWar.jpg"
+  },
+  {
+      "id": 3,
+      "title": "Avengers End Game",
+      "src": "AvengersEndGame.jpg"
+  }
+  ],
+
+  "movie_description": 
+    {
+      "id": 1,
+      "title": "The Avengers",
+      "description": "Earth's Mightiest Heroes stand as the planet's first line of defense against the most powerful threats in the universe. The Avengers began as a group of extraordinary individuals who were assembled to defeat Loki and his Chitauri army in New York City.",
+      "rating": 5
+  }
+  
+  
+}
