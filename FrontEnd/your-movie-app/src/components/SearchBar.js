@@ -1,7 +1,15 @@
-const SearchBar = () => {
+import axios from "axios";
+
+const SearchBar = ({onClick}) => {
+    
+
+
     return (
         <div>
-            <input className='searchBar' type='text' placeholder='Search Here'/>
+            <form action ="/get_search/" method="get">
+            <input id='searchBar' type='text' placeholder='Search Here'/>
+            <button type="button" onClick={onClick}>Search</button>
+            </form>
         </div>
     )
 }
